@@ -1,0 +1,36 @@
+Funcionamiento endpoint para usuarios:
+
+- Filtrar species múltiples:
+/api/animals?species=perro,gato
+
+- Filtrar breeds múltiples:
+/api/animals?breed=siames,boxer,buldog
+
+- Filtro mixto + rango edad:
+/api/animals?species=gato&age_min=2&age_max=6
+
+- Ordenar por edad (descendente):
+/api/animals?orderBy=age&direction=desc
+
+- Paginación:
+/api/animals?page=2&limit=12
+
+- Todo junto:
+/api/animals?
+species=gato,perro&
+breed=siames,pastor&
+age_min=1&
+age_max=8&
+orderBy=age&
+direction=asc&
+page=1&
+limit=20
+
+
+NOTAS:
+
+
+IMPORTANTE:
+22. Arreglar redireccion cuando se modifica el nombre de un perfil.
+10. Modificar el tamaño de fuente en los botones y todo.
+

@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  fullName   String
+  email      String    @unique
+  password   String
+  role       Role      @default(USER)
+  isAdminOwner    Boolean   @default(false)
+  shelterId  Int?
+  shelter    Shelter?  @relation(fields: [shelterId], references: [id])
+  requests   AdoptionRequest[]  @relation("UserRequests")
+  requestsAssigned AdoptionRequest[] @relation("RequestAdmin")
+  firstLoginCompleted Boolean @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Shelter {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  email       String   @unique
+  address     String   @unique
+  phone       String?  @unique
+  description String?
+  admins  User[]
+  animals Animal[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Animal {
+  id            Int     @id @default(autoincrement())
+  name          String
+  species       String
+  breed         String
+  gender        String
+  age           Int?
+  description   String?
+  adopted       Boolean @default(false)
+  shelterId     Int
+  shelter       Shelter @relation(fields: [shelterId], references: [id])
+  photos        Photo[]
+  requests      AdoptionRequest[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Photo {
+  id        Int     @id @default(autoincrement())
+  url       String
+  publicId  String?
+  animalId  Int
+  animal    Animal  @relation(fields: [animalId], references: [id])
+}
+
+model AdoptionRequest {
+  id        Int           @id @default(autoincrement())
+  message   String?
+  status    RequestStatus @default(PENDING)
+  userId    Int
+  user      User          @relation("UserRequests", fields: [userId], references: [id])
+  animalId  Int
+  animal    Animal        @relation(fields: [animalId], references: [id])
+  adminId   Int?     
+  admin     User?         @relation("RequestAdmin", fields: [adminId], references: [id])
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

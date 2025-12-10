@@ -1,0 +1,47 @@
+CONTINUAR CON "ADMIN ORIGINAL ES EL UNICO QUE PUEDE BORRAR A OTROS ADMINS DE LA PROTECTORA".
+
+Register user
+
+{
+    "fullName":"Pablo",
+    "email":"p@p.com",
+    "password":"1234",
+    "role":"ADMIN"
+}
+
+{
+    "fullName":"Carlos",
+    "email":"carlos@carl.com",
+    "password":"1234",
+    "role":"USER"
+}
+
+{
+  "fullName": "Laura Martínez",
+  "email": "lauram@protectora.com",
+  "password": "123456",
+  "role": "ADMIN"
+}
+
+Register shelter
+
+{
+    "name":"ProtectoraAlmeria",
+    "address":"protectora@almeria.com",
+    "phone":"999999999",
+    "email":"p@protectoraalmeria.com",
+    "description":"hola"
+}
+
+{
+  "name": "Toby",
+  "species": "Perro",
+  "breed": "Labrador",
+  "gender": "Macho",
+  "age": 2
+}
+
+{ 
+  "animalId": 1,
+  "message": "Me gustaría adoptar a Toby"
+}
