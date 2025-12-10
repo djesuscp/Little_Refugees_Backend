@@ -34,19 +34,12 @@ export const createAdoptionRequest = async (req: AuthRequest, res: Response) => 
     });
     if (existingRequest) return res.status(400).json({ message: "Ya has enviado una solicitud para este animal" });
 
-    // // *** NUEVO: Asignar la solicitud a un admin de la protectora ***
-    // const assignedAdmin = await prisma.user.findFirst({
-    //   where: { shelterId: animal.shelterId, role: "ADMIN" },
-    //   orderBy: { id: "asc" }
-    // }); // ← añadido
-
     // Crear solicitud de adopción.
     const request = await prisma.adoptionRequest.create({
       data: {
         userId: req.user.id,
         animalId: Number(animalId),
-        message,
-        //adminId: assignedAdmin?.id ?? null  // ← añadido
+        message
       },
       include: { animal: true, user: true },
     });
@@ -67,7 +60,7 @@ export const getMyRequests = async (req: AuthRequest, res: Response) => {
     // Comprobar que el usuario está autorizado.
     if (!req.user) return res.status(401).json({ message: "No autorizado." });
 
-    // --- NUEVO: filtros y ordenación ---
+    // Filtros.
     const { status, orderBy, direction = "desc" } = req.query;
 
     const filters: any = {
