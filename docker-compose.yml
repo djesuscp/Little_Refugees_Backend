@@ -27,13 +27,5 @@ services:
     ports:
       - "3000:3000"
 
-  frontend:
-    build: ./frontend
-    container_name: little_refugees-frontend
-    depends_on:
-      - backend
-    ports:
-      - "4200:80"
-
 volumes:
   db_data:
