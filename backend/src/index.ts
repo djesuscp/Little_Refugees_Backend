@@ -12,12 +12,22 @@ dotenv.config();
 
 const app = express();
 //app.use(cors());
-app.use(cors({
-  origin: 'https://little-refugees-frontend.onrender.com',
-  methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
-  allowedHeaders: 'Content-Type, Authorization',
-  credentials: true,
-}));
+const allowedOrigins = [
+  "https://little-refugees-frontend.onrender.com",
+  "http://localhost:4200"
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
+// MUY IMPORTANTE: manejar el preflight OPTIONS
+app.options("*", cors());
 app.use(express.json());
 
 // Rutas principales
