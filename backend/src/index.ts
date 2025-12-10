@@ -21,12 +21,9 @@ app.use(
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
   })
 );
 
-// Preflight para TODAS las rutas
-app.options("/", cors());
 
 app.use(express.json());
 
