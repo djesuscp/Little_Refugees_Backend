@@ -12,13 +12,13 @@ const router = Router();
 // Actualizar el estado del primer login.
 router.put("/first-login", authenticateJWT, updateFirstLoginStatus);
 
-// Actualizar mi perfil (USER o ADMIN)
+// Actualizar mi perfil (USER o ADMIN).
 router.put("/me", authenticateJWT, updateMyProfile);
 
-// Eliminar mi cuenta (solo usuarios normales — la lógica lo valida)
+// Eliminar mi cuenta (solo usuarios normales).
 router.delete("/me", authenticateJWT, deleteMyAccount);
 
-// Eliminar a otro usuario (owner elimina admin)
+// Eliminar a otro usuario (owner elimina admin).
 router.delete("/:id", authenticateJWT, deleteUserByOwner);
 
 export default router;

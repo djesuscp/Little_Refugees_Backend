@@ -72,7 +72,7 @@ export const createShelter = async (req: any, res: Response) => {
       data: { role: "ADMIN", isAdminOwner: true, shelterId: shelter.id, firstLoginCompleted: true},
     });
 
-    // Obtener al usuario actualizado
+    // Obtener al usuario actualizado.
     const updatedUser = await prisma.user.findUnique({
       where: { id: req.user.id },
       select: {
@@ -88,7 +88,7 @@ export const createShelter = async (req: any, res: Response) => {
       },
     });
 
-    // Enviar shelter + usuario actualizado
+    // Enviar shelter y usuario actualizado.
     return res.status(201).json({
       message: "Protectora creada correctamente.",
       shelter,
@@ -144,9 +144,6 @@ export const getShelterByIdOnlyAdmin = async (req: AuthRequest, res: Response) =
 
     // Comprobar si el usuario es ADMIN.
     if (req.user.role !== "ADMIN") return res.status(403).json({ message: "No autorizado." });
-
-    // // Comprobar si el ADMIN es propietario.
-    // if (!req.user.isAdminOwner) return res.status(403).json({ message: "No es propietario de la protectora." });
 
     const shelter = await prisma.shelter.findUnique({
       where: { id: Number(id) },
@@ -417,7 +414,7 @@ export const addAdminToShelter = async (req: any, res: Response) => {
 // Eliminar admin de la protectora.
 export const removeAdminFromShelter = async (req: any, res: Response) => {
   try {
-    const { adminId, newAdminId } = req.body; // ← añadido
+    const { adminId, newAdminId } = req.body;
 
     // Comprobar que el ADMIN pertenece a una protectora.
     if (!req.user.shelterId) return res.status(400).json({ message: "No perteneces a ninguna protectora." });
@@ -440,24 +437,24 @@ export const removeAdminFromShelter = async (req: any, res: Response) => {
     // El propietario no puede eliminarse a sí mismo.
     if (adminToRemove.id === req.user.id) return res.status(400).json({ message: "No puedes eliminarte a ti mismo como propietario." });
 
-    // *** NUEVO: Buscar solicitudes activas asignadas a este admin ***
+    // Buscar solicitudes activas asignadas a este admin (NO IMPLEMENTADO FINALMENTE).
     const pendingRequests = await prisma.adoptionRequest.findMany({
       where: { adminId: adminId, status: { in: ["PENDING", "APPROVED"] } }
-    }); // ← añadido
+    });
 
-    // Si tiene solicitudes activas y NO se indica reasignación → error
+    // Si tiene solicitudes activas y NO se indica reasignación da error. (NO IMPLEMENTADO FINALMENTE).
     if (pendingRequests.length > 0 && !newAdminId) {
       return res.status(400).json({
         message: "Este administrador tiene solicitudes activas. Debes reasignarlas antes de eliminarlo."
-      }); // ← añadido
+      });
     }
 
-    // *** NUEVO: Reasignar solicitudes si newAdminId existe ***
+    // Reasignar solicitudes si newAdminId existe. (NO IMPLEMENTADO FINALMENTE).
     if (newAdminId) {
       await prisma.adoptionRequest.updateMany({
         where: { adminId: adminId, status: { in: ["PENDING", "APPROVED"] } },
         data: { adminId: newAdminId }
-      }); // ← añadido
+      });
     }
 
     // Quitar el rol y desvincular de la protectora.

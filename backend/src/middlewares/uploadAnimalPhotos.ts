@@ -6,7 +6,7 @@ const uploadDir = path.join(__dirname, '../../uploads/animals');
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 
-// 👉 CREA la carpeta automáticamente si no existe
+// Crea la carpeta automáticamente si no existe.
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -35,7 +35,7 @@ export const uploadAnimalPhotos = multer({
   storage,
   limits: {
     fileSize: MAX_FILE_SIZE,
-    files: 5 // máximo 5 por subida
+    files: 5 // Máximo 5 fotos por subida.
   },
   fileFilter
 });

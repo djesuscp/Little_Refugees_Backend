@@ -3,11 +3,7 @@ import cloudinary from '../config/cloudinary';
 import prisma from '../prisma/client';
 import { AuthRequest } from '../middlewares/authentication';
 
-/**
- * POST /api/animals/admin/:id/photos
- * Sube nuevas fotos a Cloudinary y las asocia al animal.
- * Body: multipart/form-data con campo "photos" (array de archivos).
- */
+// Subir fotos de animal.
 export const uploadAnimalPhotosController = async (req: AuthRequest, res: Response) => {
   try {
     const admin = req.user;
@@ -39,7 +35,7 @@ export const uploadAnimalPhotosController = async (req: AuthRequest, res: Respon
       return res.status(400).json({ message: 'No se ha enviado ninguna foto.' });
     }
 
-    // Comprobar cuántas fotos tiene ya este animal
+    // Comprobar cuántas fotos tiene ya este animal.
     const existingCount = await prisma.photo.count({
       where: { animalId },
     });
@@ -53,12 +49,12 @@ export const uploadAnimalPhotosController = async (req: AuthRequest, res: Respon
     const createdPhotos = [];
 
     for (const file of files) {
-      // Subir a Cloudinary
+      // Subir a Cloudinary.
       const result = await cloudinary.uploader.upload(file.path, {
         folder: `little_refugees/animals/${animalId}`,
       });
 
-      // Guardar en BD
+      // Guardar en BD.
       const photo = await prisma.photo.create({
         data: {
           id: result.id,
@@ -84,10 +80,7 @@ export const uploadAnimalPhotosController = async (req: AuthRequest, res: Respon
   }
 };
 
-/**
- * DELETE /api/animals/admin/:animalId/photos/:photoId
- * Elimina una foto concreta (Cloudinary + BD).
- */
+// Elimina una foto concreta (Cloudinary + BD).
 export const deleteAnimalPhotoController = async (req: AuthRequest, res: Response) => {
   try {
     const admin = req.user;
@@ -103,7 +96,7 @@ export const deleteAnimalPhotoController = async (req: AuthRequest, res: Respons
       return res.status(400).json({ message: 'ID inválido.' });
     }
 
-    // Buscar la foto y el animal
+    // Buscar la foto y el animal.
     const photo = await prisma.photo.findUnique({
       where: { id: pId },
       include: { animal: true },
@@ -121,12 +114,12 @@ export const deleteAnimalPhotoController = async (req: AuthRequest, res: Respons
       return res.status(403).json({ message: 'No puedes eliminar fotos de animales de otra protectora.' });
     }
 
-    // Eliminar en Cloudinary (si tiene publicId)
+    // Eliminar en Cloudinary (si tiene publicId).
     if (photo.publicId) {
       await cloudinary.uploader.destroy(photo.publicId);
     }
 
-    // Eliminar en BD
+    // Eliminar en BD.
     await prisma.photo.delete({ where: { id: pId } });
 
     return res.status(200).json({ message: 'Foto eliminada correctamente.' });
@@ -139,10 +132,7 @@ export const deleteAnimalPhotoController = async (req: AuthRequest, res: Respons
   }
 };
 
-/**
- * DELETE /api/animals/admin/:animalId/photos
- * Elimina TODAS las fotos del animal (útil al borrar el animal).
- */
+// Elimina TODAS las fotos del animal (útil al borrar el animal).
 export const deleteAllAnimalPhotosController = async (req: AuthRequest, res: Response) => {
   try {
     const admin = req.user;
@@ -173,7 +163,7 @@ export const deleteAllAnimalPhotosController = async (req: AuthRequest, res: Res
       where: { animalId: aId },
     });
 
-    // Borrar recursos en Cloudinary
+    // Borrar recursos en Cloudinary.
     const publicIds = photos
       .map(p => p.publicId)
       .filter((id): id is string => !!id);
@@ -182,10 +172,10 @@ export const deleteAllAnimalPhotosController = async (req: AuthRequest, res: Res
       await cloudinary.api.delete_resources(publicIds);
     }
 
-    // Borrar en BD
+    // Borrar en BD.
     await prisma.photo.deleteMany({ where: { animalId: aId } });
 
-    // Borrar carpeta en Cloudinary (opcional, pero es lo que querías)
+    // Borrar carpeta en Cloudinary.
     await cloudinary.api.delete_folder(`little_refugees/animals/${aId}`);
 
     return res.status(200).json({ message: 'Todas las fotos del animal han sido eliminadas.' });
@@ -198,12 +188,12 @@ export const deleteAllAnimalPhotosController = async (req: AuthRequest, res: Res
   }
 };
 
-// 👉 NUEVO: obtener solo las fotos de un animal (solo ADMIN de esa protectora)
+// Obtener solo las fotos de un animal (solo ADMIN de esa protectora).
 export const getAnimalPhotos = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    // Comprobar autenticación y rol
+    // Comprobar autenticación y rol.
     if (!req.user || req.user.role !== "ADMIN") {
       return res.status(403).json({ message: "No autorizado." });
     }
@@ -213,7 +203,7 @@ export const getAnimalPhotos = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: "ID de animal inválido." });
     }
 
-    // Comprobar que el animal exista y pertenezca a la protectora del admin
+    // Comprobar que el animal exista y pertenezca a la protectora del admin.
     const animal = await prisma.animal.findUnique({
       where: { id: animalId },
       select: { id: true, shelterId: true },
@@ -229,7 +219,7 @@ export const getAnimalPhotos = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    // Obtener fotos del animal
+    // Obtener fotos del animal.
     const photos = await prisma.photo.findMany({
       where: { animalId },
       select: {

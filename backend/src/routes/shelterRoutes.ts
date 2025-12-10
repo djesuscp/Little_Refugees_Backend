@@ -14,12 +14,12 @@ import { authenticateJWT, authorizeRoles } from "../middlewares/authentication";
 
 const router = express.Router();
 
-// Rutas públicas
+// Rutas públicas.
 router.get("/", getAllShelters);
 router.get("/:id", getShelterById);
 router.post("/create-shelter", authenticateJWT, authorizeRoles("USER"), createShelter);
 
-// Rutas protegidas para ADMIN
+// Rutas protegidas para ADMIN.
 router.get("/:id/admin", authenticateJWT, authorizeRoles("ADMIN"), getShelterByIdOnlyAdmin);
 router.get("/:id/my-shelter-admins", authenticateJWT, getMyShelterAdmins);
 router.put("/:id", authenticateJWT, authorizeRoles("ADMIN"), updateShelter);

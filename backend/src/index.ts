@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Rutas principales
+// Rutas principales.
 app.use("/api/auth", authRoutes);
 app.use("/api/animals", animalRoutes);
 app.use("/api/photos", photoRoutes);

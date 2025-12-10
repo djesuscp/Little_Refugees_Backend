@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import prisma from "../prisma/client"; // ajusta la ruta si la tienes distinta
+import prisma from "../prisma/client";
 import { sendEmail } from "../utils/mailer";
 import { RequestStatus } from "@prisma/client";
 import { AuthRequest } from "../middlewares/authentication";
@@ -46,15 +46,7 @@ export const updateFirstLoginStatus = async (req: AuthRequest, res: Response) =>
   }
 };
 
-/**
- * PUT /api/users/me
- * Actualizar el perfil del usuario autenticado (USER o ADMIN).
- * - Puede cambiar fullName, email, password.
- * - Comprueba unicidad de email.
- * - Hashea password si se envía.
- */
-
-// Actualizar perfil de usuario.
+// Actualizar el perfil del usuario autenticado (USER o ADMIN).
 export const updateMyProfile = async (req: AuthRequest, res: Response) => {
   try {
     const authUser = req.user;
@@ -146,13 +138,7 @@ export const updateMyProfile = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/**
- * DELETE /api/users/me
- * Eliminar la propia cuenta (solo USERS). 
- * - Si el usuario es ADMIN owner: no permitido (para evitar romper shelter) 
- * - Si el usuario tiene solicitudes de adopción (PENDING/APPROVED), se le impide eliminarse.
- */
-
+// Eliminar la propia cuenta (solo USERS).
 export const deleteMyAccount = async (req: Request, res: Response) => {
   try {
     const authUser = (req as any).user; // datos del token
@@ -163,14 +149,14 @@ export const deleteMyAccount = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Debes proporcionar tu contraseña para eliminar la cuenta." });
     }
 
-    // Recuperar usuario completo (con contraseña)
+    // Recuperar usuario completo (con contraseña).
     const user = await prisma.user.findUnique({
       where: { id: authUser.id }
     });
 
     if (!user) return res.status(404).json({ message: "Usuario no encontrado." });
 
-    // ADMIN propietario no puede borrarse a sí mismo
+    // ADMIN propietario no puede borrarse a sí mismo.
     if (user.role === "ADMIN" && user.isAdminOwner) {
       return res.status(403).json({
         message:
@@ -178,20 +164,20 @@ export const deleteMyAccount = async (req: Request, res: Response) => {
       });
     }
 
-    // ADMIN no propietario pero con protectora → no se puede eliminar él mismo
+    // ADMIN no propietario pero con protectora no se puede eliminar a sí mismo.
     if (user.role === "ADMIN" && !user.isAdminOwner && user.shelterId) {
       return res.status(403).json({
         message: "Solo el propietario de la protectora puede eliminar tu cuenta."
       });
     }
 
-    // Verificar contraseña actual
+    // Verificar contraseña actual.
     const validPassword = await bcrypt.compare(currentPassword, user.password);
     if (!validPassword) {
       return res.status(401).json({ message: "La contraseña proporcionada es incorrecta." });
     }
 
-    // Comprobar solicitudes activas
+    // Comprobar solicitudes activas.
     const problematicRequest = await prisma.adoptionRequest.findFirst({
       where: {
         userId: user.id,
@@ -205,7 +191,7 @@ export const deleteMyAccount = async (req: Request, res: Response) => {
       });
     }
 
-    // Eliminar usuario
+    // Eliminar usuario.
     await prisma.user.delete({ where: { id: user.id } });
 
     return res.json({ message: "Cuenta eliminada correctamente." });
@@ -218,12 +204,7 @@ export const deleteMyAccount = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * DELETE /api/users/:id
- * Eliminar a otro usuario (solo admin owner puede eliminar admins no-owner).
- * - El owner puede borrar admins que sean de su shelter y no owners.
- * - No se permite borrar a otro owner ni al propio owner mediante esta ruta.
- */
+// Eliminar a otro usuario (solo admin owner puede eliminar admins no propietarios).
 export const deleteUserByOwner = async (req: Request, res: Response) => {
   try {
     const actor = (req as any).user;

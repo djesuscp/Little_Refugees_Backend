@@ -19,30 +19,30 @@ import { authenticateJWT, authorizeRoles } from "../middlewares/authentication";
 
 const router = Router();
 
-// Rutas protegidas (solo ADMIN)
+// Rutas protegidas (solo ADMIN).
 router.get("/admin", authenticateJWT, getAllAnimalsForAdmin);
 router.get("/admin/:id", authenticateJWT, getAnimalByIdForAdmin);
 router.post("/admin", authenticateJWT, createAnimal);
 router.put("/admin/:id", authenticateJWT, updateAnimal);
 router.delete("/admin/:id", authenticateJWT, deleteAnimal);
 
-// Obtener fotos de un animal (solo ADMIN)
+// Obtener fotos de un animal (solo ADMIN).
 router.get(
   "/admin/:id/photos",
   authenticateJWT,
   getAnimalPhotos
 );
 
-// Subir fotos a un animal (máx 5)
+// Subir fotos a un animal (máximo 5).
 router.post(
   '/admin/:id/photos',
   authenticateJWT,
   authorizeRoles('ADMIN'),
-  uploadAnimalPhotos.array('photos', 5), // campo "photos" en form-data
+  uploadAnimalPhotos.array('photos', 5),
   uploadAnimalPhotosController
 );
 
-// Eliminar una foto concreta
+// Eliminar una foto concreta.
 router.delete(
   '/admin/:animalId/photos/:photoId',
   authenticateJWT,
@@ -50,7 +50,7 @@ router.delete(
   deleteAnimalPhotoController
 );
 
-// Eliminar TODAS las fotos de un animal
+// Eliminar TODAS las fotos de un animal.
 router.delete(
   '/admin/:animalId/photos',
   authenticateJWT,
@@ -58,7 +58,7 @@ router.delete(
   deleteAllAnimalPhotosController
 );
 
-// Rutas públicas
+// Rutas públicas.
 router.get("/", authenticateJWT, getAllAnimalsForUser);
 router.get("/:id", authenticateJWT, getAnimalByIdForUser);
 

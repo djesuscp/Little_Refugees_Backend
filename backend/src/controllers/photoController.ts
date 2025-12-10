@@ -1,3 +1,7 @@
+/*
+ACTUALMENTE NO SE USA. Pero no se elimina por conservación preliminar.
+*/
+
 import { Request, Response } from "express";
 import prisma from "../prisma/client";
 import { AuthRequest } from "../middlewares/authentication";

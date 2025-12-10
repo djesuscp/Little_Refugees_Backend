@@ -62,12 +62,12 @@ export const getAllAnimalsForUser = async (req: AuthRequest, res: Response) => {
       adopted: false,
     };
 
-    // Filtro por nombre (búsqueda parcial)
+    // Filtro por nombre (búsqueda parcial).
     if (name) {
       filters.name = { contains: String(name), mode: "insensitive" };
     }
 
-    // Filtro species (array o string)
+    // Filtro species (array o string).
     if (species) {
       const speciesArray = Array.isArray(species)
         ? species
@@ -75,7 +75,7 @@ export const getAllAnimalsForUser = async (req: AuthRequest, res: Response) => {
       filters.species = { in: speciesArray };
     }
 
-    // Filtro breed (array o string)
+    // Filtro breed (array o string).
     if (breed) {
       const breedArray = Array.isArray(breed)
         ? breed
@@ -83,7 +83,7 @@ export const getAllAnimalsForUser = async (req: AuthRequest, res: Response) => {
       filters.breed = { in: breedArray };
     }
 
-    // Filtro gender (array o string)
+    // Filtro gender (array o string).
     if (gender) {
       const genderArray = Array.isArray(gender)
         ? gender
@@ -91,41 +91,35 @@ export const getAllAnimalsForUser = async (req: AuthRequest, res: Response) => {
       filters.gender = { in: genderArray };
     }
 
-    // Filtro por rango de edad
+    // Filtro por rango de edad.
     if (age_min || age_max) {
       filters.age = {};
       if (age_min) filters.age.gte = Number(age_min);
       if (age_max) filters.age.lte = Number(age_max);
     }
 
-    // Filtro por protectora
+    // Filtro por protectora.
     if (shelterId) {
       filters.shelterId = Number(shelterId);
     }
 
-    // Paginación
+    // Paginación.
     const pageNum = Number(page);
     const limitNum = Number(limit);
     const skip = (pageNum - 1) * limitNum;
 
-    // Ordenación (solo por edad, opcional)
-    // const sort: any = {};
-    // if (orderBy === "age") {
-    //   sort.age = direction === "desc" ? "desc" : "asc";
-    // }
-
     // Ordenación
-    const sort: any = {}; // 🔹 modificado: lo usaremos para varios campos
+    const sort: any = {};
 
     if (orderBy === "age") {
       sort.age = direction === "desc" ? "desc" : "asc";
-    } else if (orderBy === "createdAt") {                      // 🔹 agregado
-      sort.createdAt = direction === "desc" ? "desc" : "asc";  // 🔹 agregado
-    } else if (orderBy === "updatedAt") {                      // 🔹 agregado
-      sort.updatedAt = direction === "desc" ? "desc" : "asc";  // 🔹 agregado
+    } else if (orderBy === "createdAt") {                      
+      sort.createdAt = direction === "desc" ? "desc" : "asc";  
+    } else if (orderBy === "updatedAt") {                      
+      sort.updatedAt = direction === "desc" ? "desc" : "asc";
     } else {
-      // Orden por defecto: más recientes primero
-      sort.updatedAt = "asc";                                 // 🔹 agregado
+      // Orden por defecto: más recientes primero.
+      sort.updatedAt = "asc";                             
     }
 
     // Consulta a BD
@@ -153,7 +147,7 @@ export const getAllAnimalsForUser = async (req: AuthRequest, res: Response) => {
       orderBy: sort,
     });
 
-    // Total para paginación
+    // Total para paginación.
     const total = await prisma.animal.count({ where: filters });
 
     res.status(200).json({
@@ -206,12 +200,12 @@ export const getAllAnimalsForAdmin = async (req: AuthRequest, res: Response) => 
       shelterId: admin.shelterId, 
     };
 
-    // Filtro por nombre (búsqueda parcial)
+    // Filtro por nombre (búsqueda parcial).
     if (name) {
       filters.name = { contains: String(name), mode: "insensitive" };
     }
 
-    // Filtro species (array o string)
+    // Filtro species (array o string).
     if (species) {
       const speciesArray = Array.isArray(species)
         ? species
@@ -219,7 +213,7 @@ export const getAllAnimalsForAdmin = async (req: AuthRequest, res: Response) => 
       filters.species = { in: speciesArray };
     }
 
-    // Filtro breed (array o string)
+    // Filtro breed (array o string).
     if (breed) {
       const breedArray = Array.isArray(breed)
         ? breed
@@ -227,7 +221,7 @@ export const getAllAnimalsForAdmin = async (req: AuthRequest, res: Response) => 
       filters.breed = { in: breedArray };
     }
 
-    // Filtro gender (array o string)
+    // Filtro gender (array o string).
     if (gender) {
       const genderArray = Array.isArray(gender)
         ? gender
@@ -235,14 +229,14 @@ export const getAllAnimalsForAdmin = async (req: AuthRequest, res: Response) => 
       filters.gender = { in: genderArray };
     }
 
-    // Filtro por rango de edad
+    // Filtro por rango de edad.
     if (age_min || age_max) {
       filters.age = {};
       if (age_min) filters.age.gte = Number(age_min);
       if (age_max) filters.age.lte = Number(age_max);
     }
 
-    // Filtro adoptado / no adoptado (opcional)
+    // Filtro adoptado / no adoptado (opcional).
     if (adopted !== undefined) {
       filters.adopted = adopted === "true";
     }
@@ -253,26 +247,19 @@ export const getAllAnimalsForAdmin = async (req: AuthRequest, res: Response) => 
     const skip = (pageNum - 1) * limitNum;
 
     // Ordenación
-    // const sort: any = {};
-    // if (orderBy === "age") {
-    //   sort.age = direction === "desc" ? "desc" : "asc";
-    // }
-
-    // Ordenación
-    const sort: any = {}; // 🔹 modificado: lo usaremos para varios campos
+    const sort: any = {};
 
     if (orderBy === "age") {
       sort.age = direction === "desc" ? "desc" : "asc";
-    } else if (orderBy === "createdAt") {                      // 🔹 agregado
-      sort.createdAt = direction === "desc" ? "desc" : "asc";  // 🔹 agregado
-    } else if (orderBy === "updatedAt") {                      // 🔹 agregado
-      sort.updatedAt = direction === "desc" ? "desc" : "asc";  // 🔹 agregado
+    } else if (orderBy === "createdAt") {                      
+      sort.createdAt = direction === "desc" ? "desc" : "asc";  
+    } else if (orderBy === "updatedAt") {                      
+      sort.updatedAt = direction === "desc" ? "desc" : "asc";  
     } else {
-      // Orden por defecto: más recientes primero
-      sort.updatedAt = "desc";                                 // 🔹 agregado
+      // Orden por defecto: más recientes primero.
+      sort.updatedAt = "desc";                                 
     }
 
-    // Consulta a BD
     const animals = await prisma.animal.findMany({
       where: filters,
       include: { photos: true },
@@ -281,7 +268,7 @@ export const getAllAnimalsForAdmin = async (req: AuthRequest, res: Response) => 
       orderBy: sort,
     });
 
-    // Total de registros para paginación
+    // Total de registros para paginación.
     const total = await prisma.animal.count({ where: filters });
 
     res.status(200).json({
@@ -347,7 +334,7 @@ export const getAnimalByIdForAdmin = async (req: AuthRequest, res: Response) => 
       return res.status(403).json({ message: "No autorizado." });
     }
 
-    // Obtener animal por ID (solo animal + fotos).  // <-- modificado
+    // Obtener animal por ID (solo animal con sus fotos).
     const animal = await prisma.animal.findUnique({
       where: { id: Number(id) },
       include: { 
@@ -358,7 +345,7 @@ export const getAnimalByIdForAdmin = async (req: AuthRequest, res: Response) => 
     // Respuesta si no se encuentra el animal.
     if (!animal) return res.status(404).json({ message: "Animal no encontrado." });
 
-    // Evitar que el ADMIN vea animales de otra protectora. // <-- agregado
+    // Evitar que el ADMIN vea animales de otra protectora.
     if (animal.shelterId !== req.user.shelterId) {
       return res.status(403).json({ message: "No puedes ver animales de otra protectora." });
     }
@@ -396,7 +383,7 @@ export const updateAnimal = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    // Construir objeto de actualización (✔ actualización parcial)
+    // Construir objeto de actualización parcial.
     const updates: any = {};
 
     if (name) updates.name = name;
@@ -405,12 +392,12 @@ export const updateAnimal = async (req: AuthRequest, res: Response) => {
     if (gender) updates.gender = gender;
     if (description) updates.description = description;
 
-    // edad puede ser "0", por eso se evalúa diferente
+    // Edad puede ser "0".
     if (age !== undefined && age !== null && age !== "") {
       updates.age = Number(age);
     }
 
-    // adopted puede ser true/false → hay que permitir booleanos
+    // Adopted puede ser true/false.
     if (adopted !== undefined) {
       updates.adopted = adopted;
     }
@@ -440,11 +427,14 @@ export const updateAnimal = async (req: AuthRequest, res: Response) => {
 // Eliminar un animal (role == ADMIN).
 export const deleteAnimal = async (req: AuthRequest, res: Response) => {
   try {
+
+    // Comprobar que el usuario es ADMIN.
     const admin = req.user;
     if (!admin || admin.role !== 'ADMIN') {
       return res.status(403).json({ message: 'No autorizado.' });
     }
 
+    // Comprobar que el ID del animal.
     const { id } = req.params;
     const animalId = Number(id);
     if (isNaN(animalId)) {
@@ -455,15 +445,17 @@ export const deleteAnimal = async (req: AuthRequest, res: Response) => {
       where: { id: animalId },
     });
 
+    // Comprobar que el animal existe.
     if (!animal) {
       return res.status(404).json({ message: 'Animal no encontrado.' });
     }
 
+    // Evitar que se eliminen animales de otra protectora.
     if (animal.shelterId !== admin.shelterId) {
       return res.status(403).json({ message: 'No puedes eliminar animales de otra protectora.' });
     }
 
-    // 🔹 OBTENER FOTOS DEL ANIMAL
+    // Obtener fotos del animal.
     const photos = await prisma.photo.findMany({
       where: { animalId },
     });
@@ -472,27 +464,24 @@ export const deleteAnimal = async (req: AuthRequest, res: Response) => {
       .map(p => p.publicId)
       .filter((pid): pid is string => !!pid);
 
-    // 🔹 SI HAY FOTOS, BORRARLAS EN CLOUDINARY
+    // Si hay fotos, se borran de Cloudinary.
     if (publicIds.length > 0) {
       await cloudinary.api.delete_resources(publicIds);
     }
 
-    // 🔹 BORRAR REGISTROS DE FOTOS EN BD (FUNCIONA AUNQUE NO HAYA FOTOS)
+    // Se borran los registros aunque no haya fotos.
     await prisma.photo.deleteMany({ where: { animalId } });
 
-    // 🔹 NUEVO: solo intentamos borrar la carpeta si antes había fotos
-    //    y además ignoramos el error si la carpeta no existe
+    // Se borra la carpeta, ignorando si existe o no.
     if (publicIds.length > 0) {
       try {
         await cloudinary.api.delete_folder(`little_refugees/animals/${animalId}`);
       } catch (e: any) {
-        // Si quieres, puedes filtrar por código, pero normalmente
-        // podemos ignorar el error si la carpeta no existe.
-        // console.warn('No se pudo borrar la carpeta de Cloudinary:', e?.message);
+        console.warn('No se pudo borrar la carpeta de Cloudinary:', e?.message);
       }
     }
 
-    // Finalmente eliminar el animal
+    // Eliminar el animal.
     await prisma.animal.delete({ where: { id: animalId } });
 
     return res.status(200).json({ message: 'Animal eliminado correctamente.' });
