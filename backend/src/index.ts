@@ -25,7 +25,8 @@ app.use(
   })
 );
 
-app.options("*", cors());
+// Preflight para todas las rutas
+app.options("/*", cors());
 
 
 app.use(express.json());
