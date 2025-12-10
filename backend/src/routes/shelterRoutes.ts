@@ -11,7 +11,6 @@ import {
   removeAdminFromShelter,
 } from "../controllers/shelterController";
 import { authenticateJWT, authorizeRoles } from "../middlewares/authentication";
-import { get } from "http";
 
 const router = express.Router();
 
