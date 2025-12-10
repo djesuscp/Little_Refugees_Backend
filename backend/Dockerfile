@@ -9,7 +9,7 @@ COPY . .
 
 # Compilar TypeScript
 RUN npx prisma generate
-RUN npm run build   # <-- genera dist/
+RUN npm run build
 
 EXPOSE 3000
 
