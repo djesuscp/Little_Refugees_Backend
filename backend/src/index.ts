@@ -11,7 +11,7 @@ import userRoutes from "./routes/userRoutes";
 dotenv.config();
 
 const app = express();
-//app.use(cors());
+
 const allowedOrigins = [
   "https://little-refugees-frontend.onrender.com"
 ];
@@ -19,19 +19,18 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
-// Preflight para todas las rutas
-app.options("/api", cors());
-
+// Preflight para TODAS las rutas
+app.options("/", cors());
 
 app.use(express.json());
 
-// Rutas principales
+// Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/animals", animalRoutes);
 app.use("/api/photos", photoRoutes);
