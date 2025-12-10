@@ -7,6 +7,8 @@ RUN npm install
 
 COPY . .
 
+# RUN npm install cors
+
 # Generar Prisma Client dentro del contenedor
 RUN npx prisma generate
 

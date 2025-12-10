@@ -12,21 +12,13 @@ dotenv.config();
 
 const app = express();
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
 app.use(express.json());
 
-
+app.use(cors({
+    origin: "https://little-refugees-frontend.onrender.com",
+    headers: ["Content-Type"],
+    credentials: true,
+}));
 // Rutas principales
 app.use("/api/auth", authRoutes);
 app.use("/api/animals", animalRoutes);
@@ -37,3 +29,4 @@ app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
