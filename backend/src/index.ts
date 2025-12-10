@@ -1,4 +1,5 @@
-import express from "express";
+import express, { NextFunction } from "express";
+import { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
@@ -12,24 +13,26 @@ dotenv.config();
 
 const app = express();
 
-// Manejo manual del preflight (esto arregla el 404)
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '/api/auth');
-  res.header('Access-Control-Allow-Origin', '/api/animals');
-  res.header('Access-Control-Allow-Origin', '/api/photos');
-  res.header('Access-Control-Allow-Origin', '/api/shelters');
-  res.header('Access-Control-Allow-Origin', '/api/adoptions');
-  res.header('Access-Control-Allow-Origin', '/api/users');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.sendStatus(200);
+// 1️⃣ CORS GLOBAL
+app.use(cors({
+  origin: "https://little-refugees-frontend.onrender.com",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
+
+// 2️⃣ Manejo AUTOMÁTICO para todos los preflight
+app.use((req: any, res: any, next: NextFunction) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
 });
 
-// CORS normal
-app.use(cors());
+// 3️⃣ JSON parser
 app.use(express.json());
 
-// Rutas
+// 4️⃣ Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/animals", animalRoutes);
 app.use("/api/photos", photoRoutes);
@@ -38,4 +41,6 @@ app.use("/api/adoptions", adoptionRequestRoutes);
 app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}`)
+);
