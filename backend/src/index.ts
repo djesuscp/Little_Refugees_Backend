@@ -10,15 +10,15 @@ import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 
-const app = express();
+const corsOptions = {
+  origin: 'https://little-refugees-frontend.onrender.com',
+  optionsSuccessStatus: 200
+}
 
+const app = express();
+app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use(cors({
-    origin: "https://little-refugees-frontend.onrender.com",
-    headers: ["Content-Type"],
-    credentials: true,
-}));
 // Rutas principales
 app.use("/api/auth", authRoutes);
 app.use("/api/animals", animalRoutes);
@@ -29,4 +29,3 @@ app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-
