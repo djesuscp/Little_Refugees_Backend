@@ -14,7 +14,12 @@ const app = express();
 
 // Manejo manual del preflight (esto arregla el 404)
 app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', '/api/auth');
+  res.header('Access-Control-Allow-Origin', '/api/animals');
+  res.header('Access-Control-Allow-Origin', '/api/photos');
+  res.header('Access-Control-Allow-Origin', '/api/shelters');
+  res.header('Access-Control-Allow-Origin', '/api/adoptions');
+  res.header('Access-Control-Allow-Origin', '/api/users');
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.sendStatus(200);
