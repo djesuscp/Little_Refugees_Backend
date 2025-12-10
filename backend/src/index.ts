@@ -13,8 +13,7 @@ dotenv.config();
 const app = express();
 //app.use(cors());
 const allowedOrigins = [
-  "https://little-refugees-frontend.onrender.com",
-  "http://localhost:4200"
+  "https://little-refugees-frontend.onrender.com"
 ];
 
 app.use(
@@ -26,8 +25,7 @@ app.use(
   })
 );
 
-// MUY IMPORTANTE: manejar el preflight OPTIONS
-app.options("*", cors());
+
 app.use(express.json());
 
 // Rutas principales
