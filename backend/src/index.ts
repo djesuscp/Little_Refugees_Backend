@@ -12,19 +12,16 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  "https://little-refugees-frontend.onrender.com"
-];
+// Manejo manual del preflight (esto arregla el 404)
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(200);
+});
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-
+// CORS normal
+app.use(cors());
 app.use(express.json());
 
 // Rutas
