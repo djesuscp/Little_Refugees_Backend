@@ -7,8 +7,11 @@ RUN npm install
 
 COPY . .
 
-# Generar Prisma Client dentro del contenedor
+# Compilar TypeScript
 RUN npx prisma generate
+RUN npm run build   # <-- genera dist/
 
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+
+CMD ["npm", "run", "start"]
+
