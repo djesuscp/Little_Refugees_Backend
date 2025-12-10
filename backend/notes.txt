@@ -29,11 +29,8 @@ limit=20
 
 NOTAS:
 
-Genial. Bueno, ya tengo todo funcionando a excepcion de una cosa. En la edicion del perfil (admin o user), cuando se modifica el nombre o el email, se aplican los cambios correctamente, pero de repente se muestra una pagina con nombre undefined y sin datos de usuario. Es decir, como si un usuario estuviera logueado pero sin sus datos.
-Entonces, dime si es posible implementar que, cuando se actualice nombre o email en el componente profile-edit, se haga llamada a backend de nuevo para recargar correctamente los datos. Es sencillo aplicar esto? Piensa que esto debe ocurrir justo después de que el popup de confirm-password-dialog haga su trabajo.
-
 IMPORTANTE:
 22. Arreglar redireccion cuando se modifica el nombre de un perfil.
 10. Modificar el tamaño de fuente en los botones y todo.
-Revisar texto se solicitudes en usuarios.
+Revisar texto de solicitudes en usuarios.
 
