@@ -10,8 +10,13 @@ import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 
+const corsOptions = {
+   origin: 'https://little-refugees-frontend.onrender.com',
+   optionsSuccessStatus: 200,
+ };
+
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Rutas principales
