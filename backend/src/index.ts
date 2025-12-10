@@ -13,9 +13,9 @@ dotenv.config();
 const app = express();
 //app.use(cors());
 app.use(cors({
-  origin: [
-    'https://little-refugees-frontend.onrender.com',
-  ],
+  origin: 'https://little-refugees-frontend.onrender.com',
+  methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization',
   credentials: true,
 }));
 app.use(express.json());
