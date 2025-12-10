@@ -26,7 +26,7 @@ app.use(
 );
 
 // Preflight para todas las rutas
-app.options("/*", cors());
+app.options("/api", cors());
 
 
 app.use(express.json());
