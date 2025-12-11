@@ -181,13 +181,13 @@ export const deleteMyAccount = async (req: Request, res: Response) => {
     const problematicRequest = await prisma.adoptionRequest.findFirst({
       where: {
         userId: user.id,
-        status: { in: [RequestStatus.PENDING, RequestStatus.APPROVED] },
+        status: { in: [RequestStatus.REJECTED, RequestStatus.PENDING, RequestStatus.APPROVED] },
       },
     });
 
     if (problematicRequest) {
       return res.status(400).json({
-        message: "No puedes eliminar tu cuenta si tienes solicitudes de adopción pendientes o aprobadas."
+        message: "No puedes eliminar tu cuenta si tienes solicitudes de adopción registradas. Pide al administrador que elimine tus solicitudes presentadas."
       });
     }
 
