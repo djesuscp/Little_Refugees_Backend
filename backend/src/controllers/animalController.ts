@@ -455,6 +455,17 @@ export const deleteAnimal = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'No puedes eliminar animales de otra protectora.' });
     }
 
+    // Comprobar si el animal tiene solicitudes de adopción.
+    const requestsCount = await prisma.adoptionRequest.count({
+      where: { animalId }
+    });
+
+    if (requestsCount > 0) {
+      return res.status(400).json({
+        message: "No se puede eliminar un animal que tiene solicitudes de adopción."
+      });
+    }
+
     // Obtener fotos del animal.
     const photos = await prisma.photo.findMany({
       where: { animalId },
